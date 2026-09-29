@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -31,6 +33,8 @@ export default function RootLayout({
     <html lang="en" className={`${bricolage.variable} h-full`}>
       <body className="min-h-full flex flex-col bg-paper text-ink">
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
