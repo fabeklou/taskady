@@ -8,7 +8,7 @@ export default async function DashboardPage() {
   const jar = await cookies();
   const token = jar.get(SESSION_COOKIE)?.value;
   const userId = token ? await verifySessionToken(token) : null;
-  const user = userId ? findUserById(userId) : undefined;
+  const user = userId ? await findUserById(userId) : undefined;
   if (!user) redirect("/login");
 
   return <DashboardClient username={user.username} />;

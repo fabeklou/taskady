@@ -5,7 +5,7 @@ import { findUserById } from "@/lib/store";
 export async function GET() {
   const userId = await getSessionUserId();
   if (!userId) return NextResponse.json({ user: null }, { status: 401 });
-  const user = findUserById(userId);
+  const user = await findUserById(userId);
   if (!user) return NextResponse.json({ user: null }, { status: 401 });
   return NextResponse.json({ user: { id: user.id, username: user.username } });
 }

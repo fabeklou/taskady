@@ -38,13 +38,13 @@ export async function POST(req: Request) {
   const username = parsed.data.username.trim();
 
   if (mode === "signup") {
-    if (findUserByUsername(username)) {
+    if (await findUserByUsername(username)) {
       return NextResponse.json(
         { error: "Username is already taken" },
         { status: 409 }
       );
     }
-    const user = createUser(username, await hashPassword(parsed.data.password));
+    const user = await createUser(username, await hashPassword(parsed.data.password));
     const token = await signSession(user.id);
     const res = NextResponse.json(
       { user: publicUser(user.id, user.username) },
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     return res;
   }
 
-  const existing = findUserByUsername(username);
+  const existing = await findUserByUsername(username);
   if (!existing) {
     return NextResponse.json(
       { error: "Invalid username or password" },

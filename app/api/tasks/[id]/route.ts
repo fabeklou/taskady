@@ -29,7 +29,7 @@ export async function PATCH(
     );
   }
 
-  const task = updateTaskForUser(id, userId, parsed.data);
+  const task = await updateTaskForUser(id, userId, parsed.data);
   if (!task) return NextResponse.json({ error: "Task not found" }, { status: 404 });
   return NextResponse.json({ task });
 }
@@ -41,9 +41,8 @@ export async function DELETE(
   const userId = await getSessionUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params;
-  const ok = getTaskForUser(id, userId)
-    ? deleteTaskForUser(id, userId)
-    : false;
+  const existing = await getTaskForUser(id, userId);
+  const ok = existing ? await deleteTaskForUser(id, userId) : false;
   if (!ok) return NextResponse.json({ error: "Task not found" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }

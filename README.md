@@ -59,17 +59,19 @@ npm run build      # Next.js production build must pass
 
 1. Push this repo to GitHub.
 2. On [vercel.com](https://vercel.com) → **Add New → Project** → import the repo.
-3. Environment Variables:
+3. Create a free Postgres at [neon.tech](https://neon.tech), then Environment Variables:
    - `JWT_SECRET` = long random string (required)
    - `DEMO_USERNAME` = `demo`
    - `DEMO_PASSWORD` = `demo1234`
-4. **Deploy.** No build config needed (`vercel.json` + Next.js defaults handle it).
+   - `DATABASE_URL` = Neon **pooled** connection string (required in production)
+   - `DIRECT_URL` = Neon **direct** connection string (used for migrations)
+4. **Deploy.** Tables migrate automatically during the build. No other build config needed.
 5. Copy the production URL into the **Live Demo** section above.
 
-> Note: the free MVP persists data in a file-db (`.data/db.json` locally,
-> `/tmp` on Vercel serverless, which is ephemeral per instance). For durable
-> production, swap `lib/store.ts` for Neon Postgres + Prisma — route signatures
-> and tests stay the same. See `AGENTS.md §6`.
+> Note: without `DATABASE_URL` the app falls back to a file-db (`.data/db.json`
+> locally, `/tmp` on Vercel serverless). That fallback is per-instance and
+> ephemeral, so logins and tasks break across instances — local dev and tests
+> only, never production. See `AGENTS.md §6`.
 
 ## 🗂️ Project map
 

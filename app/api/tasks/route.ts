@@ -9,7 +9,7 @@ export async function GET(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const url = new URL(req.url);
-  const tasks = filterTasks(listTasksForUser(userId), {
+  const tasks = filterTasks(await listTasksForUser(userId), {
     q: url.searchParams.get("q") ?? "",
     category: url.searchParams.get("category") ?? "ALL",
     priority: url.searchParams.get("priority") ?? "ALL",
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const task = createTaskForUser(userId, {
+  const task = await createTaskForUser(userId, {
     title: parsed.data.title,
     note: parsed.data.note ?? "",
     priority: parsed.data.priority ?? "MEDIUM",

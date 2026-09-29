@@ -1,0 +1,41 @@
+// Prisma schema for Taskady's shared production database (Neon Postgres).
+// Mirrors the file-db shape 1:1 (ISO strings for dates) so both backends
+// behind lib/store.ts behave identically. Local dev and tests keep using
+// the file-db; this backend activates when DATABASE_URL is set (Vercel).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id
+  username     String   @unique
+  passwordHash String
+  createdAt    String
+  tasks        Task[]
+}
+
+model Task {
+  id           String  @id
+  userId       String
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String
+  note         String  @default("")
+  priority     String
+  category     String
+  status       String
+  pomodoros    Int     @default(0)
+  completedAt  String?
+  dueAt        String?
+  remindBefore String  @default("NONE")
+  position     Int     @default(0)
+  createdAt    String
+  updatedAt    String
+
+  @@index([userId, position])
+}

@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
-  const ok = reorderTasksForUser(userId, parsed.data.orderedIds);
+  const ok = await reorderTasksForUser(userId, parsed.data.orderedIds);
   if (!ok) return NextResponse.json({ error: "Task not found" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }

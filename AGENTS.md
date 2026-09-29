@@ -26,7 +26,10 @@ tests/          → vitest contract tests for the above
 
 - `lib/filter.ts` is the **single source of truth** for task filtering. The API
   (`GET /api/tasks`) and the dashboard client MUST both use `filterTasks()`.
-- `lib/store.ts` is the only module that touches persistence. Every task query
+- `lib/store.ts` is the only module that touches persistence. It selects the
+  backend once at startup: Prisma/Neon Postgres when `DATABASE_URL` is set
+  (production), otherwise the file-db (`lib/store-file.ts` / `lib/store-prisma.ts`
+  expose identical async APIs). Every task query
   MUST scope by `userId`. Never return another user's rows. Never leak `passwordHash`.
 - `lib/validations.ts` (zod) is the **endpoint contract**. Routes validate with it
   before touching the store. Tests validate the schemas.
@@ -93,13 +96,12 @@ tests/          → vitest contract tests for the above
 
 ## 6. Deployment & Data (Vercel Free)
 
-- Zero-config deploy: `vercel` with `JWT_SECRET`, `DEMO_USERNAME`, `DEMO_PASSWORD` set.
-  File-db path: local `.data/db.json`, on Vercel `/tmp/taskady-db.json` (see `lib/store.ts`).
-- **Known trade-off:** `/tmp` on serverless is ephemeral per instance. This is accepted
-  for the free MVP (demo + personal use). Task rows may differ between instances,
-  but the demo user id is hashed from the username so sessions stay valid
-  everywhere. For durable multi-instance production, migrate
-  `lib/store.ts` to Neon Postgres + Prisma WITHOUT changing route signatures or tests.
+- Zero-config deploy: `vercel` with `JWT_SECRET`, `DEMO_USERNAME`, `DEMO_PASSWORD`,
+  `DATABASE_URL` (Neon pooled) and `DIRECT_URL` (Neon direct, for migrations) set.
+  Schema lives in `prisma/`; `scripts/prebuild.mjs` runs `migrate deploy` during
+  the Vercel build only. Without `DATABASE_URL` the app falls back to the file-db:
+  local `.data/db.json`, on Vercel `/tmp/taskady-db.json` — ephemeral per instance,
+  so sessions and tasks break across instances (dev/test only, never production).
 - Never commit `.data/`, `.env*`, or real user data. `.env.example` documents all vars.
 
 ## 7. Forbidden
