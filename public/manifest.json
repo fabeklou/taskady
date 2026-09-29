@@ -1,0 +1,10 @@
+{
+  "name": "taskady",
+  "short_name": "taskady",
+  "description": "Mobile-first tasks + Pomodoro focus. Made to move.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#163300",
+  "theme_color": "#163300",
+  "icons": []
+}

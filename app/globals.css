@@ -1,0 +1,260 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+
+  /* SupaDupa-inspired design tokens */
+  --color-forest: #163300;
+  --color-forest-deep: #0e2200;
+  --color-lime: #d3f773;
+  --color-lime-soft: #e9fbb8;
+  --color-paper: #faf9f4;
+  --color-cream: #f3efe3;
+  --color-ink: #1a1a1a;
+  --color-smoke: #e0e0e0;
+  --color-amber-pop: #ffb020;
+  --color-coral-pop: #ff5a5a;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-lime);
+  color: var(--color-forest);
+}
+
+/* Correct pointer cursors on every interactive element */
+button,
+select,
+input[type="checkbox"],
+input[type="radio"],
+input[type="datetime-local"],
+label:has(input, select),
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+select:disabled,
+input:disabled {
+  cursor: not-allowed;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="search"],
+textarea {
+  cursor: text;
+}
+
+/* Mobile-first tap targets + safe areas */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Shared field styling: inputs + selects look identical */
+.field-base {
+  border-radius: 1rem;
+  border: 2px solid color-mix(in srgb, var(--color-forest) 20%, transparent);
+  background: #fff;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease,
+    background-color 0.18s ease, transform 0.12s ease;
+}
+
+.field-base::placeholder {
+  color: color-mix(in srgb, var(--color-ink) 40%, transparent);
+}
+
+.field-base:focus {
+  border-color: var(--color-forest);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-lime) 55%, transparent);
+}
+
+.field-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.5rem;
+  font-weight: 700;
+  color: var(--color-forest);
+  background-color: var(--color-paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23163300' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+}
+
+.field-select:hover {
+  background-color: var(--color-cream);
+}
+
+/* Buttons: smooth press + hover everywhere */
+.btn-smooth {
+  transition: transform 0.12s ease, box-shadow 0.18s ease,
+    background-color 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+}
+
+.btn-smooth:hover {
+  filter: brightness(1.04);
+}
+
+.btn-smooth:active {
+  transform: scale(0.96);
+}
+
+/* Task cards: lift on hover, settle on press */
+.task-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease,
+    border-color 0.2s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(22, 51, 0, 0.9);
+}
+
+.task-card:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* List entrance: soft stagger */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-in {
+  animation: card-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Bottom-sheet + modal transitions */
+@keyframes sheet-up {
+  from {
+    transform: translateY(32px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.sheet-up {
+  animation: sheet-up 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0.94) translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.pop-in {
+  animation: pop-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.overlay-in {
+  animation: overlay-in 0.2s ease both;
+}
+
+/* Drag & drop states */
+.drag-handle {
+  touch-action: none;
+}
+
+.dragging-card {
+  opacity: 0.55;
+  transform: scale(1.02) rotate(0.6deg);
+  box-shadow: 0 12px 24px rgba(22, 51, 0, 0.25);
+  z-index: 30;
+  position: relative;
+}
+
+/* Tunnel effect: tasks visibly dissolve as they scroll away, top + bottom */
+.tunnel-mask {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 30px,
+    #000 calc(100% - 150px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 30px,
+    #000 calc(100% - 150px),
+    transparent 100%
+  );
+}
+/* Glassy sticky CTA: tasks visibly slide underneath */
+.glass-cta {
+  background: color-mix(in srgb, var(--color-lime) 78%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 2px solid color-mix(in srgb, var(--color-forest) 85%, transparent);
+}
+
+/* Reminder pulse */
+@keyframes soft-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+.reminder-pulse {
+  animation: soft-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
