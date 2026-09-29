@@ -31,9 +31,7 @@ type, deep forest green `#163300`, lime `#D3F773`, huge bold headings, pill butt
 
 ## 🚀 Live Demo
 
-> **Paste your Vercel link here:**
->
-> 👉 `https://YOUR-APP-NAME.vercel.app`
+> 👉 `https://taskady.vercel.app`
 >
 > Test account (works locally and on the demo): **`demo` / `demo1234`**
 
