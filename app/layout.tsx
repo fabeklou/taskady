@@ -1,13 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({
+// Self-hosted (no build-time Google Fonts fetch — Vercel builds failed on it).
+const bricolage = localFont({
+  src: "../public/fonts/bricolage-grotesque-latin-wght-normal.woff2",
   variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: "300 700",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
