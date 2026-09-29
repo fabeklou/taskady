@@ -79,6 +79,17 @@ describe("per-user data isolation (contract for /api/tasks*)", () => {
     expect(store.listTasksForUser(demo!.id).length).toBeGreaterThan(0);
   });
 
+  it("seeds a stable demo user id across fresh databases (multi-instance auth)", async () => {
+    const { rmSync } = await import("fs");
+    const store = await import("@/lib/store");
+    const name = process.env.DEMO_USERNAME || "demo";
+    const firstId = store.findUserByUsername(name)!.id;
+    // Simulate a second serverless instance with its own empty /tmp copy.
+    rmSync(TEST_DB, { force: true });
+    const secondId = store.findUserByUsername(name)!.id;
+    expect(secondId).toBe(firstId);
+  });
+
   it("assigns incremental positions and reorders per user", async () => {
     const store = await import("@/lib/store");
     const alice = store.createUser("alice3", "hash");

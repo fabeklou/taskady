@@ -96,7 +96,9 @@ tests/          → vitest contract tests for the above
 - Zero-config deploy: `vercel` with `JWT_SECRET`, `DEMO_USERNAME`, `DEMO_PASSWORD` set.
   File-db path: local `.data/db.json`, on Vercel `/tmp/taskady-db.json` (see `lib/store.ts`).
 - **Known trade-off:** `/tmp` on serverless is ephemeral per instance. This is accepted
-  for the free MVP (demo + personal use). For durable multi-instance production, migrate
+  for the free MVP (demo + personal use). Task rows may differ between instances,
+  but the demo user id is hashed from the username so sessions stay valid
+  everywhere. For durable multi-instance production, migrate
   `lib/store.ts` to Neon Postgres + Prisma WITHOUT changing route signatures or tests.
 - Never commit `.data/`, `.env*`, or real user data. `.env.example` documents all vars.
 

@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { randomUUID } from "crypto";
+import { createHash, randomUUID } from "crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import type { RemindBefore, Task } from "./types";
@@ -37,7 +37,12 @@ function blankDb(): DbShape {
 function seedDb(db: DbShape): DbShape {
   if (db.users.some((u) => u.username === DEMO_USERNAME)) return db;
   const now = new Date().toISOString();
-  const demoId = randomUUID();
+  // Stable id: every serverless instance seeds its own /tmp copy, so a
+  // random id here would make a session minted on instance A unknown on
+  // instance B — the browser then loops /dashboard <-> /login on a blank page.
+  const demoId = createHash("sha256")
+    .update(`taskady-demo-user:${DEMO_USERNAME}`)
+    .digest("hex");
   db.users.push({
     id: demoId,
     username: DEMO_USERNAME,
