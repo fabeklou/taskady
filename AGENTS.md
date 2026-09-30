@@ -1,6 +1,7 @@
 # AGENTS.md — Taskady Operating Rules
 
-> Read this file before writing any code. It overrides default instincts.
+> Read `README_BEFORE_CODING.md` FIRST for project context, then this file.
+> This file overrides default instincts.
 > Think like a **senior software engineer + architect with 20+ years of experience**:
 > boring, minimal, tested, secure, and shippable on Vercel Free.
 
